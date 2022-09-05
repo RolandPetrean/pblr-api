@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  api:
+    build: ./src
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/src
+    environment:
+      PGPASSWORD: admin
+      PGHOST: db
+      PGUSER: postgres
+      PGPORT: 5432
+      PGDATABASE: dev
+    depends_on:
+      - db
+    restart: on-failure
+
+  db:
+    build: ./db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/volume/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: dev
+    restart: unless-stopped
